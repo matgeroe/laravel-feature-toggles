@@ -28,14 +28,15 @@ class ListFeaturesCommand extends Command
      */
     public function handle()
     {
-        if (empty(Feature::allArray())) {
-            $this->call('feature:create');
-        }
 
-        if (empty(Feature::allArray())) {
+        $this->call('feature:create');
+
+        $featureArray = Feature::allArray();
+
+        if (empty($featureArray)) {
             $this->warn('Please define features in the config file');
         } else {
-            $this->table(['id', 'name', 'state', 'created_at', 'updated_at'], Feature::allArray());
+            $this->table(['id', 'name', 'state', 'created at', 'updated at'], $featureArray);
         }
 
     }

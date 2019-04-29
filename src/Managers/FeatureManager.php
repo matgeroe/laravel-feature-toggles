@@ -5,6 +5,7 @@ namespace MatthiasWilbrink\FeatureToggle\Managers;
 use Illuminate\Support\Facades\Config;
 use MatthiasWilbrink\FeatureToggle\Exceptions\FeatureNotFoundException;
 use MatthiasWilbrink\FeatureToggle\Exceptions\NoFeaturesException;
+use MatthiasWilbrink\FeatureToggle\Exceptions\NoToggableFeaturesException;
 use MatthiasWilbrink\FeatureToggle\Models\Feature;
 
 /**
@@ -139,12 +140,17 @@ class FeatureManager
      * @param int $filter
      * @return array
      * @throws NoFeaturesException
+     * @throws NoToggableFeaturesException
      */
     public function options(int $filter)
     {
-        $options = $this->all()->where('state', $filter);
+        $options = $this->all();
         if ($options->isNotEmpty()) {
-            return $options->pluck('name')->toArray();
+            $options = $options->where('state', $filter);
+            if ($options->isNotEmpty()) {
+                return $options->pluck('name')->toArray();
+            }
+            throw new NoToggableFeaturesException();
         }
         throw new NoFeaturesException();
     }
