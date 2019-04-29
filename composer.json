@@ -1,0 +1,38 @@
+{
+    "name": "matthiaswilbrink/laravel-feature-toggles",
+    "description": "Toggle parts of your application on or off",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Matthias Wilbrink"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.2",
+        "illuminate/config": "5.7.*|5.8.*",
+        "illuminate/database": "5.7.*|5.8.*",
+        "illuminate/support": "5.7.*|5.8.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "MatthiasWilbrink\\FeatureToggle\\": "src/"
+        },
+        "files": [
+            "src/Helpers.php"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MatthiasWilbrink\\FeatureToggle\\Providers\\FeatureToggleServiceProvider"
+            ],
+            "aliases": {
+            }
+        }
+    }
+}
