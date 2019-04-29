@@ -13,25 +13,25 @@ class InsertNewFeaturesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'features:insert';
+    protected $signature = 'feature:create';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description= 'Reads features from config, and persists them';
+    protected $description= 'Reads features from config, and inserts them in the database';
 
     /**
      * Execute the console command.
      *
      * @return void
      */
-    protected function handle()
+    public function handle()
     {
         collect(Config::get('features.features', null))
-            ->each(function (string $feature) {
-                if (Feature::createFeature($feature) !== null) {
+            ->each(function (int $default, string $feature ) {
+                if (Feature::createFeature($feature, $default) !== null) {
                     $this->info("Feature created: {$feature}.");
                 } else {
                     $this->info("Feature already exists: {$feature}.");

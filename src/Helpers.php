@@ -1,7 +1,10 @@
 <?php
-if (! function_exists('feature')) {
+
+use MatthiasWilbrink\FeatureToggle\Managers\FeatureManager;
+
+if (!function_exists('feature')) {
     function feature(string $name): bool
     {
-        return (app(\MatthiasWilbrink\FeatureToggle\Managers\FeatureManager::class))->isOn($name);
+        return (app(FeatureManager::class))->isEnabled($name);
     }
 }

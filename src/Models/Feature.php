@@ -28,4 +28,10 @@ class Feature extends Model
      * @var string
      */
     protected $table = 'feature_toggles';
+
+
+    public function getStateLabelAttribute()
+    {
+        return $this->state ? 'On' : 'Off';
+    }
 }
