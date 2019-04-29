@@ -2,9 +2,30 @@
 
 namespace MatthiasWilbrink\FeatureToggle\Models;
 
-class Feature
-{
-    public static const ON = 1;
+use Illuminate\Database\Eloquent\Model;
 
-    public static const OFF = 0;
+/**
+ * Class Feature
+ *
+ * @property int $id
+ * @property string $name
+ * @property bool $state
+ * @package MatthiasWilbrink\FeatureToggle\Models
+ */
+class Feature extends Model
+{
+    /**
+     * The ON state
+     */
+    public const ON = 1;
+
+    /**
+     * The OFF state
+     */
+    public const OFF = 0;
+
+    /**
+     * @var string
+     */
+    protected $table = 'feature_toggles';
 }

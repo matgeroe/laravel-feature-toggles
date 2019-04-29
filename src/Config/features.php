@@ -1,5 +1,8 @@
 <?php
 
+use MatthiasWilbrink\FeatureToggle\Models\Feature;
+
+
 return [
 
     /*
@@ -12,6 +15,8 @@ return [
     */
 
     'features' => [
-        'demo_feature'=> \MatthiasWilbrink\FeatureToggle\Models\Feature::OFF,
+        'demo_feature'=> Feature::OFF,
     ],
+
+    'default_behaviour'=> Feature::OFF,
 ];
