@@ -4,6 +4,7 @@ namespace MatthiasWilbrink\FeatureToggle\Managers;
 
 use Illuminate\Support\Facades\Config;
 use MatthiasWilbrink\FeatureToggle\Exceptions\FeatureNotFoundException;
+use MatthiasWilbrink\FeatureToggle\Exceptions\NoFeaturesException;
 use MatthiasWilbrink\FeatureToggle\Models\Feature;
 
 /**
@@ -131,6 +132,21 @@ class FeatureManager
             $feature->state = $feature->stateLabel;
             return $feature;
         })->toArray();
+    }
+
+    /**
+     * Get features as options for commands
+     * @param int $filter
+     * @return array
+     * @throws NoFeaturesException
+     */
+    public function options(int $filter)
+    {
+        $options = $this->all()->where('state', $filter);
+        if ($options->isNotEmpty()) {
+            return $options->pluck('name')->toArray();
+        }
+        throw new NoFeaturesException();
     }
 
     /**

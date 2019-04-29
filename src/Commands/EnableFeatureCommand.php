@@ -4,7 +4,9 @@ namespace MatthiasWilbrink\FeatureToggle\Commands;
 
 use Illuminate\Console\Command;
 use MatthiasWilbrink\FeatureToggle\Exceptions\FeatureNotFoundException;
+use MatthiasWilbrink\FeatureToggle\Exceptions\NoFeaturesException;
 use MatthiasWilbrink\FeatureToggle\Facades\Feature;
+use MatthiasWilbrink\FeatureToggle\Models\Feature as FeatureModel;
 
 class EnableFeatureCommand extends Command
 {
@@ -13,7 +15,7 @@ class EnableFeatureCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'feature:enable {name : Feature name}';
+    protected $signature = 'feature:enable';
 
     /**
      * The console command description.
@@ -30,7 +32,7 @@ class EnableFeatureCommand extends Command
     public function handle()
     {
         try {
-            $featureName = $this->argument('name');
+            $featureName = $this->choice('Which feature would you like to turn on?', Feature::options(FeatureModel::OFF));
 
             if (Feature::enable($featureName) !== null) {
 
@@ -42,6 +44,8 @@ class EnableFeatureCommand extends Command
 
         } catch (FeatureNotFoundException $exception) {
             $this->warn("Feature {$exception->featureName} could not be found");
+        } catch (NoFeaturesException $exception) {
+           $this->call('feature:list');
         }
     }
 }

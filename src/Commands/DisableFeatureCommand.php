@@ -4,7 +4,9 @@ namespace MatthiasWilbrink\FeatureToggle\Commands;
 
 use Illuminate\Console\Command;
 use MatthiasWilbrink\FeatureToggle\Exceptions\FeatureNotFoundException;
+use MatthiasWilbrink\FeatureToggle\Exceptions\NoFeaturesException;
 use MatthiasWilbrink\FeatureToggle\Facades\Feature;
+use MatthiasWilbrink\FeatureToggle\Models\Feature as FeatureModel;
 
 class DisableFeatureCommand extends Command
 {
@@ -13,7 +15,7 @@ class DisableFeatureCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'feature:disable {name : Feature name}';
+    protected $signature = 'feature:disable';
 
     /**
      * The console command description.
@@ -30,7 +32,7 @@ class DisableFeatureCommand extends Command
     public function handle()
     {
         try {
-            $featureName = $this->argument('name');
+            $featureName = $this->choice('Which feature would you like to turn off?', Feature::options(FeatureModel::ON));
 
             if (Feature::disable($featureName) !== null) {
 
@@ -42,6 +44,8 @@ class DisableFeatureCommand extends Command
 
         } catch (FeatureNotFoundException $exception) {
             $this->warn("Feature {$exception->featureName} could not be found");
+        } catch (NoFeaturesException $exception) {
+            $this->call('feature:list');
         }
     }
 }

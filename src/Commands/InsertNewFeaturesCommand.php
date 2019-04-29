@@ -20,7 +20,7 @@ class InsertNewFeaturesCommand extends Command
      *
      * @var string
      */
-    protected $description= 'Reads features from config, and inserts them in the database';
+    protected $description = 'Reads features from config, and inserts them in the database';
 
     /**
      * Execute the console command.
@@ -29,8 +29,10 @@ class InsertNewFeaturesCommand extends Command
      */
     public function handle()
     {
+        $this->info('Reading features defined in config into the database');
+
         collect(Config::get('features.features', null))
-            ->each(function (int $default, string $feature ) {
+            ->each(function (int $default, string $feature) {
                 if (Feature::createFeature($feature, $default) !== null) {
                     $this->info("Feature created: {$feature}.");
                 } else {
