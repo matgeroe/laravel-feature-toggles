@@ -4,11 +4,13 @@ namespace MatthiasWilbrink\FeatureToggle\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use MatthiasWilbrink\FeatureToggle\Commands\ClearCacheCommand;
 use MatthiasWilbrink\FeatureToggle\Commands\DisableFeatureCommand;
 use MatthiasWilbrink\FeatureToggle\Commands\EnableFeatureCommand;
 use MatthiasWilbrink\FeatureToggle\Commands\InsertNewFeaturesCommand;
 use MatthiasWilbrink\FeatureToggle\Commands\ListFeaturesCommand;
 use MatthiasWilbrink\FeatureToggle\Facades\Feature;
+use MatthiasWilbrink\FeatureToggle\Managers\FeatureManager;
 
 class FeatureToggleServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,16 @@ class FeatureToggleServiceProvider extends ServiceProvider
         $this->bootConfig();
         $this->bootBlade();
         $this->bootCommands();
+    }
+
+    /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->registerConfig();
     }
 
     /**
@@ -47,7 +59,7 @@ class FeatureToggleServiceProvider extends ServiceProvider
     private function bootBlade()
     {
         Blade::if('feature', function ($name) {
-            return Feature::isEnabled($name);
+            return (app(FeatureManager::class))->isEnabled($name);
         });
     }
 
@@ -62,7 +74,18 @@ class FeatureToggleServiceProvider extends ServiceProvider
                 ListFeaturesCommand::class,
                 EnableFeatureCommand::class,
                 DisableFeatureCommand::class,
+                ClearCacheCommand::class,
             ]);
         }
+    }
+
+    /**
+     * Merge config
+     */
+    private function registerConfig()
+    {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../Config/features.php', 'features'
+        );
     }
 }

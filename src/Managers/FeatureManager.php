@@ -2,6 +2,7 @@
 
 namespace MatthiasWilbrink\FeatureToggle\Managers;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use MatthiasWilbrink\FeatureToggle\Exceptions\FeatureNotFoundException;
 use MatthiasWilbrink\FeatureToggle\Exceptions\NoFeaturesException;
@@ -14,6 +15,10 @@ use MatthiasWilbrink\FeatureToggle\Models\Feature;
  */
 class FeatureManager
 {
+
+    private const CACHE_NAME = 'feature-toggles';
+    private const CACHE_TTL = 600;
+
     /**
      * Check if a feature is enabled
      *
@@ -41,16 +46,6 @@ class FeatureManager
     }
 
     /**
-     * Return the default state
-     *
-     * @return bool
-     */
-    public function default(): bool
-    {
-        return Config::get('features.default_behaviour', Feature::OFF);
-    }
-
-    /**
      * Enable a feature
      *
      * @param string $name
@@ -59,6 +54,8 @@ class FeatureManager
      */
     public function enable(string $name)
     {
+        $this->updateCache();
+
         $feature = $this->getFeature($name);
         if ($feature === null) {
             throw new FeatureNotFoundException($name);
@@ -68,6 +65,9 @@ class FeatureManager
         }
         $feature->state = Feature::ON;
         $feature->save();
+
+        $this->updateCache();
+
         return $feature;
     }
 
@@ -80,6 +80,8 @@ class FeatureManager
      */
     public function disable(string $name)
     {
+        $this->updateCache();
+
         $feature = $this->getFeature($name);
         if ($feature === null) {
             throw new FeatureNotFoundException($name);
@@ -89,6 +91,9 @@ class FeatureManager
         }
         $feature->state = Feature::OFF;
         $feature->save();
+
+        $this->updateCache();
+
         return $feature;
     }
 
@@ -101,6 +106,8 @@ class FeatureManager
      */
     public function createFeature(string $name, int $initialState)
     {
+        $this->updateCache();
+
         $feature = $this->getFeature($name);
         if ($feature !== null) {
             return null;
@@ -110,16 +117,6 @@ class FeatureManager
         $feature->state = $initialState;
         $feature->save();
         return $feature;
-    }
-
-    /**
-     * Get all features as collection
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|Feature[]
-     */
-    public function all()
-    {
-        return Feature::all();
     }
 
     /**
@@ -156,6 +153,46 @@ class FeatureManager
     }
 
     /**
+     * Check if the feature cache exists
+     *
+     * @return bool
+     */
+    public function cacheExists(): bool
+    {
+        return Cache::has(self::CACHE_NAME);
+    }
+
+    /**
+     * Clear the feature cache
+     *
+     * @return void
+     */
+    public function clearCache(): void
+    {
+        Cache::forget(self::CACHE_NAME);
+    }
+
+    /**
+     * Return the default state
+     *
+     * @return bool
+     */
+    private function default(): bool
+    {
+        return Config::get('features.default_behaviour', Feature::OFF);
+    }
+
+    /**
+     * Get all features as collection
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|Feature[]
+     */
+    private function all()
+    {
+        return Feature::all();
+    }
+
+    /**
      * Get feature by name if it exists
      *
      * @param string $name
@@ -163,6 +200,46 @@ class FeatureManager
      */
     private function getFeature(string $name)
     {
-        return Feature::where('name', $name)->first();
+        $useCache = Config::get('features.feature_caching', false);
+
+        if ($useCache) {
+            return $this->getFeaturesCache()
+                ->where('name', $name)
+                ->first();
+        }
+
+        return Feature::where('name', $name)
+            ->first();
     }
+
+    /**
+     * Get features from cache
+     *
+     * @return mixed
+     */
+    private function getFeaturesCache()
+    {
+        if (!$this->cacheExists()) {
+            $values = $this->all();
+            // Note ttl does not work on file based caching.
+            Cache::put(self::CACHE_NAME, $values, self::CACHE_TTL);
+        }
+
+        return Cache::get(self::CACHE_NAME);
+    }
+
+    /**
+     * Clear and then fill the cache
+     *
+     * @return void
+     */
+    private function updateCache(): void
+    {
+        $this->clearCache();
+
+        if (Config::get('features.feature_caching', false)) {
+            $this->getFeaturesCache();
+        }
+    }
+
 }

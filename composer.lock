@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a6099c23b4674a4154763d942ea6a93",
+    "content-hash": "e56b60c26947c10c0586ad7ed70ce904",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -263,12 +263,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "d4888d2de2f413a8cecfa46850348da8eb292497"
+                "reference": "f34455f789eb24315f12f3f4aa816d971b47c6b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/d4888d2de2f413a8cecfa46850348da8eb292497",
-                "reference": "d4888d2de2f413a8cecfa46850348da8eb292497",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/f34455f789eb24315f12f3f4aa816d971b47c6b7",
+                "reference": "f34455f789eb24315f12f3f4aa816d971b47c6b7",
                 "shasum": ""
             },
             "require": {
@@ -315,7 +315,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2019-04-27T06:21:43+00:00"
+            "time": "2019-05-01T13:05:14+00:00"
         },
         {
             "name": "illuminate/support",
@@ -323,12 +323,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "7fbf8d76946ee53587955b670bd8a47e3d48e854"
+                "reference": "34c95ef50cbc1f11785791aad6ad692cc71eeb27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/7fbf8d76946ee53587955b670bd8a47e3d48e854",
-                "reference": "7fbf8d76946ee53587955b670bd8a47e3d48e854",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/34c95ef50cbc1f11785791aad6ad692cc71eeb27",
+                "reference": "34c95ef50cbc1f11785791aad6ad692cc71eeb27",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2019-04-25T14:06:24+00:00"
+            "time": "2019-04-30T14:13:48+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -853,12 +853,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "8406472bf4deb6f713cb72bee6594849c9e20ecc"
+                "reference": "f6c9d504a22af0065d59bc12080bf8abc479c945"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/8406472bf4deb6f713cb72bee6594849c9e20ecc",
-                "reference": "8406472bf4deb6f713cb72bee6594849c9e20ecc",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/f6c9d504a22af0065d59bc12080bf8abc479c945",
+                "reference": "f6c9d504a22af0065d59bc12080bf8abc479c945",
                 "shasum": ""
             },
             "require": {
@@ -920,7 +920,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-29T10:05:16+00:00"
+            "time": "2019-05-01T12:55:49+00:00"
         }
     ],
     "packages-dev": [],

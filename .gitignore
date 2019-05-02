@@ -13,7 +13,5 @@ yarn-error.log
 .env
 .phpunit.result.cache
 phpunit.xml
-intranet.sublime-workspace
-intranet.sublime-project
 ruleset.xml
 .DS_Store
