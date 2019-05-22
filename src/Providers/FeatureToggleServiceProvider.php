@@ -9,7 +9,6 @@ use MatthiasWilbrink\FeatureToggle\Commands\DisableFeatureCommand;
 use MatthiasWilbrink\FeatureToggle\Commands\EnableFeatureCommand;
 use MatthiasWilbrink\FeatureToggle\Commands\InsertNewFeaturesCommand;
 use MatthiasWilbrink\FeatureToggle\Commands\ListFeaturesCommand;
-use MatthiasWilbrink\FeatureToggle\Facades\Feature;
 use MatthiasWilbrink\FeatureToggle\Managers\FeatureManager;
 
 class FeatureToggleServiceProvider extends ServiceProvider
@@ -19,8 +18,8 @@ class FeatureToggleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->bootMigrations();
-        $this->bootConfig();
+        $this->publishMigrations();
+        $this->publishConfig();
         $this->bootBlade();
         $this->bootCommands();
     }
@@ -38,18 +37,20 @@ class FeatureToggleServiceProvider extends ServiceProvider
     /**
      * Add migrations
      */
-    private function bootMigrations()
+    private function publishMigrations()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../Migrations');
+        $this->publishes([
+            __DIR__.'/../Migrations/' => database_path('migrations'),
+        ], 'migrations');
     }
 
     /**
      * Add config
      */
-    private function bootConfig()
+    private function publishConfig()
     {
         $this->publishes([
-            __DIR__ . '/../Config/features.php' => config_path('features.php'),
+            __DIR__.'/../Config/features.php' => config_path('features.php'),
         ], 'config');
     }
 
@@ -85,7 +86,7 @@ class FeatureToggleServiceProvider extends ServiceProvider
     private function registerConfig()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../Config/features.php', 'features'
+            __DIR__.'/../Config/features.php', 'features'
         );
     }
 }

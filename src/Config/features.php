@@ -41,4 +41,17 @@ return [
     */
 
     'default_behaviour' => Feature::OFF,
+
+    /*
+   |--------------------------------------------------------------------------
+   | Test behaviour
+   |--------------------------------------------------------------------------
+   |
+   | This defines the state a feature will assume
+   | when you are testing the application this
+   | ensures every feature is always tested.
+   |
+   */
+
+    'test_behaviour' => Feature::ON,
 ];

@@ -11,12 +11,13 @@ use MatthiasWilbrink\FeatureToggle\Models\Feature;
 
 /**
  * Class FeatureManager
+ *
  * @package MatthiasWilbrink\FeatureToggle\Managers
  */
 class FeatureManager
 {
-
     private const CACHE_NAME = 'feature-toggles';
+
     private const CACHE_TTL = 600;
 
     /**
@@ -27,6 +28,10 @@ class FeatureManager
      */
     public function isEnabled(string $name): bool
     {
+        if (Config::get('app.env') === 'testing') {
+            return $this->testingDefault();
+        }
+
         $feature = $this->getFeature($name);
 
         return $feature ? $feature->state : $this->default();
@@ -34,7 +39,6 @@ class FeatureManager
 
     /**
      * Check if a feature is enabled
-     *
      * isOn is an alias of isEnabled
      *
      * @param string $name
@@ -116,6 +120,7 @@ class FeatureManager
         $feature->name = $name;
         $feature->state = $initialState;
         $feature->save();
+
         return $feature;
     }
 
@@ -128,12 +133,14 @@ class FeatureManager
     {
         return $this->all()->map(function ($feature) {
             $feature->state = $feature->stateLabel;
+
             return $feature;
         })->toArray();
     }
 
     /**
      * Get features as options for commands
+     *
      * @param int $filter
      * @return array
      * @throws NoFeaturesException
@@ -183,6 +190,16 @@ class FeatureManager
     }
 
     /**
+     * Return the testing state
+     *
+     * @return bool
+     */
+    private function testingDefault(): bool
+    {
+        return Config::get('features.test_behaviour', Feature::ON);
+    }
+
+    /**
      * Get all features as collection
      *
      * @return \Illuminate\Database\Eloquent\Collection|Feature[]
@@ -204,12 +221,12 @@ class FeatureManager
 
         if ($useCache) {
             return $this->getFeaturesCache()
-                ->where('name', $name)
-                ->first();
+                        ->where('name', $name)
+                        ->first();
         }
 
         return Feature::where('name', $name)
-            ->first();
+                      ->first();
     }
 
     /**
@@ -219,7 +236,7 @@ class FeatureManager
      */
     private function getFeaturesCache()
     {
-        if (!$this->cacheExists()) {
+        if (! $this->cacheExists()) {
             $values = $this->all();
             // Note ttl does not work on file based caching.
             Cache::put(self::CACHE_NAME, $values, self::CACHE_TTL);
@@ -241,5 +258,4 @@ class FeatureManager
             $this->getFeaturesCache();
         }
     }
-
 }
