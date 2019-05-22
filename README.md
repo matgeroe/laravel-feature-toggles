@@ -102,7 +102,7 @@ public function someMethod(FeatureManager $featureManager)
 
 ### Other activities
 
-You might also want to allow your users to enable or disable features. (Things like an Christmas theme come to mind)  
+You might also want to allow your users to enable or disable features. (Things like a Christmas theme come to mind)  
 ```php
 public function turnTheSnowFlakesOn(FeatureManager $featureManager)
 {
