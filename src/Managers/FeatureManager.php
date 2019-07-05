@@ -135,7 +135,7 @@ class FeatureManager
             $feature->state = $feature->stateLabel;
 
             return $feature;
-        })->toArray();
+        })->forget('id')->toArray();
     }
 
     /**
