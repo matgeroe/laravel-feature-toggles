@@ -41,6 +41,7 @@ class DisableFeatureCommand extends Command
             if (Feature::disable($featureName) !== null) {
 
                 $this->info("Turned feature {$featureName} off");
+                $this->call('feature:clear-cache');
                 return;
             }
 

@@ -41,6 +41,7 @@ class EnableFeatureCommand extends Command
             if (Feature::enable($featureName) !== null) {
 
                 $this->info("Turned feature {$featureName} on");
+                $this->call('feature:clear-cache');
                 return;
             }
 

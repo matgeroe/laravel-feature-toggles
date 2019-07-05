@@ -39,5 +39,6 @@ class InsertNewFeaturesCommand extends Command
                     $this->info("Feature already exists: {$feature}.");
                 }
             });
+        $this->call('feature:clear-cache');
     }
 }

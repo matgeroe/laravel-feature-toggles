@@ -36,7 +36,7 @@ class ListFeaturesCommand extends Command
         if (empty($featureArray)) {
             $this->warn('Please define features in the config file');
         } else {
-            $this->table(['id', 'name', 'state', 'created at', 'updated at'], $featureArray);
+            $this->table(['name', 'state', 'created at', 'updated at'], $featureArray);
         }
 
     }
